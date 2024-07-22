@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
-import { res } from '../common/utils';
+import { res } from '../../common/utils';
 import { CreateFoodDto } from './dtos/foods.dto';
 import { FoodsService } from './foods.service';
 
