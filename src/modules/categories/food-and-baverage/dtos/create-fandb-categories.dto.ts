@@ -1,4 +1,5 @@
 import { IsDefined, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateFAndBCategoryDto {
   @IsString()
@@ -8,5 +9,5 @@ export class CreateFAndBCategoryDto {
 
   @IsString()
   @IsOptional()
-  parent: string;
+  parent?: string | Types.ObjectId;
 }
