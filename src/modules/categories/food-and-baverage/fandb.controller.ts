@@ -121,7 +121,7 @@ export class FAndBCategoriesController {
     }
     const result = await this.fAndBCategoriesService.updateOne(
       { _id },
-      { isDeleted: true },
+      { isDeleted: true, deletedAt: Math.floor(Date.now() / 1000) },
     );
     return res(HttpStatus.OK, result);
   }

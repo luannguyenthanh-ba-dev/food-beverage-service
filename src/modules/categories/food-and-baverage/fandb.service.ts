@@ -122,6 +122,7 @@ export class FAndBCategoriesService {
       name?: string;
       parent?: string | Types.ObjectId;
       isDeleted?: boolean;
+      deletedAt?: number;
     },
   ) {
     const updated = await this.fandbCategoriesModel

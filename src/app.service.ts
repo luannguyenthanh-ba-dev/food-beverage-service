@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   getEnviroment(): object {
     return {
+      service: 'Food And Beverage Service',
       environment: process.env.environment,
     };
   }
