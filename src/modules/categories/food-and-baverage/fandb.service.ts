@@ -30,6 +30,7 @@ export class FAndBCategoriesService {
       name?: string;
       parent?: string | Types.ObjectId;
       _id?: string | Types.ObjectId;
+      isDeleted?: boolean;
     },
     populates?: string[],
   ) {
@@ -60,6 +61,7 @@ export class FAndBCategoriesService {
       name?: string;
       parent?: string | Types.ObjectId;
       _id?: string | Types.ObjectId;
+      isDeleted?: boolean;
       order?: {
         orderBy: string;
         sort: 'asc' | 'desc';
@@ -76,6 +78,9 @@ export class FAndBCategoriesService {
     }
     if (filters._id) {
       conditions._id = filters._id;
+    }
+    if (filters.isDeleted === false || filters.isDeleted) {
+      conditions.isDeleted = filters.isDeleted;
     }
     // Run query
     let query = this.fandbCategoriesModel.find(conditions);
@@ -94,5 +99,34 @@ export class FAndBCategoriesService {
     }
     const categories = await query;
     return categories;
+  }
+
+  /**
+   * Update one food and beverage category
+   * @param filters
+   * @param filters.name String
+   * @param filters.parent String | ObjectId
+   * @param filters._id String | ObjectId
+   * @param data
+   * @param data.name String
+   * @param data.parent String | ObjectId
+   * @returns updated fandbCategory
+   */
+  async updateOne(
+    filters: {
+      name?: string;
+      parent?: string | Types.ObjectId;
+      _id?: string | Types.ObjectId;
+    },
+    data: {
+      name?: string;
+      parent?: string | Types.ObjectId;
+      isDeleted?: boolean;
+    },
+  ) {
+    const updated = await this.fandbCategoriesModel
+      .findOneAndUpdate(filters, data, { new: true })
+      .populate('parent');
+    return updated;
   }
 }

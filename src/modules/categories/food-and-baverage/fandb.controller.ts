@@ -1,20 +1,31 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   NotAcceptableException,
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { FAndBCategoriesService } from './fandb.service';
-import { CreateFAndBCategoryDto, FindFAndBCategoriesDto } from './dtos';
+import {
+  CreateFAndBCategoryDto,
+  FindFAndBCategoriesDto,
+  UpdateSpecificFAndBDto,
+} from './dtos';
 import { res } from 'src/common/utils';
 import { Logger } from '@nestjs/common';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
+import { RolesGuard } from 'src/modules/auth/roles.guard';
+import { Roles } from 'src/modules/auth/auth.decorator';
+import { ROLES } from 'src/modules/auth/auth.const';
 
 @Controller('v1/fandb-categories')
 export class FAndBCategoriesController {
@@ -23,22 +34,21 @@ export class FAndBCategoriesController {
     private readonly fAndBCategoriesService: FAndBCategoriesService,
   ) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(ROLES.SUPER_ADMIN, ROLES.ADMIN)
   @Post()
   async create(@Body() data: CreateFAndBCategoryDto) {
     if (data.parent) {
       const validParent = await this.fAndBCategoriesService.findOne({
         _id: data.parent,
+        isDeleted: false,
       });
       if (!validParent) {
-        this.logger.error(
-          'ERROR: Not found your request parent FandB Category!',
-        );
         throw new NotFoundException(
           'ERROR: Not found your request parent FandB Category!',
         );
       }
       if (validParent.parent) {
-        this.logger.error('ERROR: We just accept 1 level child of Categories!');
         throw new NotAcceptableException(
           'ERROR: We just accept 1 level child of Categories!',
         );
@@ -53,11 +63,11 @@ export class FAndBCategoriesController {
     const category = await this.fAndBCategoriesService.findOne(
       {
         _id,
+        isDeleted: false,
       },
       ['parent'],
     );
     if (!category) {
-      this.logger.error('ERROR: Not found your request FandB Category!');
       throw new NotFoundException(
         'ERROR: Not found your request FandB Category!',
       );
@@ -73,9 +83,46 @@ export class FAndBCategoriesController {
   @UsePipes(new ValidationPipe({ transform: true }))
   async findMany(@Query() filters: FindFAndBCategoriesDto) {
     const categories = await this.fAndBCategoriesService.findMany(
-      filters,
-      ['parent']
+      { ...filters, isDeleted: false },
+      ['parent'],
     );
     return categories;
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(ROLES.SUPER_ADMIN, ROLES.ADMIN)
+  @Put(':_id')
+  async updateOne(
+    @Param('_id') _id: string,
+    @Body() data: UpdateSpecificFAndBDto,
+  ) {
+    const fandb = await this.fAndBCategoriesService.findOne({ _id });
+    if (!fandb) {
+      throw new NotFoundException(
+        'ERROR: Not found your request FandB Category for updating!',
+      );
+    }
+    const result = await this.fAndBCategoriesService.updateOne({ _id }, data);
+    return res(HttpStatus.OK, result);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(ROLES.SUPER_ADMIN, ROLES.ADMIN)
+  @Delete(':_id')
+  async deleteOne(@Param('_id') _id: string) {
+    const fandb = await this.fAndBCategoriesService.findOne({
+      _id,
+      isDeleted: false,
+    });
+    if (!fandb) {
+      throw new NotFoundException(
+        'ERROR: Not found your request FandB Category for delete!',
+      );
+    }
+    const result = await this.fAndBCategoriesService.updateOne(
+      { _id },
+      { isDeleted: true },
+    );
+    return res(HttpStatus.OK, result);
   }
 }
