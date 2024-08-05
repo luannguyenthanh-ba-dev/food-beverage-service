@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { ANY_USER, ROLES_KEY } from './auth.const';
 
 @Injectable()
@@ -14,9 +13,9 @@ export class RolesGuard implements CanActivate {
 
   constructor(private reflector: Reflector) {}
 
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const apiKey = request.headers['api-key'];
     // Note: When we use internal API Key we must accept cross call all feature and pass the role guard too!

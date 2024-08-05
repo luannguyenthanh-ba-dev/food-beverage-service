@@ -6,7 +6,6 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { CrossInternalServicesHttpRequest, Methods } from 'src/common/utils';
 
 @Injectable()
@@ -46,9 +45,10 @@ export class AuthGuard implements CanActivate {
     let user;
     // Validate request token:
     try {
+      this.logger.log(`Call to: ${this.userService}/v1/authz/introspections`);
       user = await CrossInternalServicesHttpRequest(
         Methods.post,
-        `${this.userService}/v1/auth/introspections`,
+        `${this.userService}/v1/authz/introspections`,
         {
           headers: {
             authorization: token,
