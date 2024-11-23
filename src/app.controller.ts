@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   getEnvironment(): object {
-    return this.appService.getEnviroment();
+    return this.appService.getEnvironment();
   }
 }
