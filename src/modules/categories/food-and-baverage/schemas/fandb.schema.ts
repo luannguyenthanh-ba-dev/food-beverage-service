@@ -1,12 +1,12 @@
 import * as mongoose from 'mongoose';
-import { FANDB_CATEGORIES_SCHEMA_TOKEN } from '../fandb.const';
+import { FANDB_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
 const { Schema } = mongoose;
 
 export const FAndBCategoriesSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     parent: {
-      // Note: We just focus on 1 level child, please dont create as a Tree for categories
+      // Note: We just focus on 1 level child, please don't create as a Tree for categories
       type: Schema.Types.ObjectId,
       ref: FANDB_CATEGORIES_SCHEMA_TOKEN,
       default: null,

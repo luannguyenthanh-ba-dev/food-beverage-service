@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FANDB_CATEGORIES_SCHEMA_TOKEN } from './fandb.const';
 import { Model, Types } from 'mongoose';
 import { IFAndBModel } from './interfaces/fandb.model.interface';
+import { FANDB_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
 
 @Injectable()
 export class FAndBCategoriesService {
