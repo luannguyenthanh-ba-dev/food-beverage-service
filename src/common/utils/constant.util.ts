@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
 /**
- * This token that NestJs will use to registered in the scope of module (Categories) - This name will map to "fandbCategories" collection in Database
+ * This token that NestJs will use to registered in the scope of module (Categories) - This name will map to "productsCategories" collection in Database
  */
-export const FANDB_CATEGORIES_SCHEMA_TOKEN = 'fandbCategories';
+export const PRODUCTS_CATEGORIES_SCHEMA_TOKEN = 'productsCategories';
 
 /**
  * This token that NestJs will use to registered in the scope of module (Products) - This name will map to "products" collection in Database

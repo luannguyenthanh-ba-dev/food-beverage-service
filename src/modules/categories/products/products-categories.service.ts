@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { IFAndBModel } from './interfaces/fandb.model.interface';
-import { FANDB_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
+import { IProductsCategoriesModel } from './interfaces/products-categories.model.interface';
+import { PRODUCTS_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
 
 @Injectable()
-export class FAndBCategoriesService {
+export class ProductsCategoriesService {
   constructor(
-    @InjectModel(FANDB_CATEGORIES_SCHEMA_TOKEN)
-    private readonly fandbCategoriesModel: Model<IFAndBModel>,
+    @InjectModel(PRODUCTS_CATEGORIES_SCHEMA_TOKEN)
+    private readonly productsCategoriesModel: Model<IProductsCategoriesModel>,
   ) {}
 
   async create(data: { name: string; parent?: string | Types.ObjectId }) {
-    const result = await this.fandbCategoriesModel.create(data);
+    const result = await this.productsCategoriesModel.create(data);
     return result;
   }
 
@@ -23,43 +23,42 @@ export class FAndBCategoriesService {
    * @param filters.parent String | ObjectId
    * @param filters._id String | ObjectId
    * @param populates String[] - Ex: ["parent"]
-   * @returns fandbCategory
+   * @returns productsCategories
    */
   async findOne(
     filters: {
       name?: string;
-      parent?: string | Types.ObjectId;
+      // parent?: string | Types.ObjectId;
       _id?: string | Types.ObjectId;
       isDeleted?: boolean;
     },
-    populates?: string[],
+    // populates?: string[],
   ) {
-    let query = this.fandbCategoriesModel.findOne(filters);
-    if (populates && populates.length) {
-      populates.forEach((key) => {
-        query = query.populate(key);
-      });
-    }
-    const fandbCategory = await query;
-    return fandbCategory;
+    let query = this.productsCategoriesModel.findOne(filters);
+    // if (populates && populates.length) {
+    //   populates.forEach((key) => {
+    //     query = query.populate(key);
+    //   });
+    // }
+    const rs = await query;
+    return rs;
   }
 
   /**
    * Find many food and beverage category
    * @param filters
    * @param filters.name String
-   * @param filters.parent String | ObjectId
    * @param filters._id String | ObjectId
    * @param filters.order Object
    * @param filters.order.orderBy String
    * @param filters.order.sort 'asc' | 'desc'
    * @param populates String[] - Ex: ["parent"]
-   * @returns List of Categroies
+   * @returns List of productsCategories
    */
   async findMany(
     filters: {
       name?: string;
-      parent?: string | Types.ObjectId;
+      // parent?: string | Types.ObjectId;
       _id?: string | Types.ObjectId;
       isDeleted?: boolean;
       order?: {
@@ -67,15 +66,15 @@ export class FAndBCategoriesService {
         sort: 'asc' | 'desc';
       };
     },
-    populates?: string[],
+    // populates?: string[],
   ) {
     let conditions: any = {};
     if (filters.name) {
       conditions.name = { $regex: filters.name, $options: 'i' };
     }
-    if (filters.parent) {
-      conditions.parent = filters.parent;
-    }
+    // if (filters.parent) {
+    //   conditions.parent = filters.parent;
+    // }
     if (filters._id) {
       conditions._id = filters._id;
     }
@@ -83,12 +82,12 @@ export class FAndBCategoriesService {
       conditions.isDeleted = filters.isDeleted;
     }
     // Run query
-    let query = this.fandbCategoriesModel.find(conditions);
-    if (populates && populates.length) {
-      populates.forEach((key) => {
-        query = query.populate(key);
-      });
-    }
+    let query = this.productsCategoriesModel.find(conditions);
+    // if (populates && populates.length) {
+    //   populates.forEach((key) => {
+    //     query = query.populate(key);
+    //   });
+    // }
     if (filters.order && Object.keys(filters.order).length) {
       if (filters.order.sort === 'asc') {
         query = query.sort({ [filters.order.orderBy]: 1 });
@@ -105,17 +104,16 @@ export class FAndBCategoriesService {
    * Update one food and beverage category
    * @param filters
    * @param filters.name String
-   * @param filters.parent String | ObjectId
    * @param filters._id String | ObjectId
    * @param data
    * @param data.name String
    * @param data.parent String | ObjectId
-   * @returns updated fandbCategory
+   * @returns updated productsCategories
    */
   async updateOne(
     filters: {
       name?: string;
-      parent?: string | Types.ObjectId;
+      // parent?: string | Types.ObjectId;
       _id?: string | Types.ObjectId;
     },
     data: {
@@ -125,9 +123,8 @@ export class FAndBCategoriesService {
       deletedAt?: number;
     },
   ) {
-    const updated = await this.fandbCategoriesModel
-      .findOneAndUpdate(filters, data, { new: true })
-      .populate('parent');
+    const updated = await this.productsCategoriesModel
+      .findOneAndUpdate(filters, data, { new: true });
     return updated;
   }
 }

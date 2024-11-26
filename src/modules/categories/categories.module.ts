@@ -1,18 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FAndBCategoriesSchema } from './food-and-baverage/schemas/fandb.schema';
-import { FAndBCategoriesController } from './food-and-baverage/fandb.controller';
-import { FAndBCategoriesService } from './food-and-baverage/fandb.service';
-import { FANDB_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
+import { ProductsCategoriesSchema } from './products/schemas/products-categories.schema';
+import { ProductsCategoriesController } from './products/products-categories.controller';
+import { ProductsCategoriesService } from './products/products-categories.service';
+import { PRODUCTS_CATEGORIES_SCHEMA_TOKEN } from 'src/common/utils/constant.util';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: FANDB_CATEGORIES_SCHEMA_TOKEN, schema: FAndBCategoriesSchema },
+      {
+        name: PRODUCTS_CATEGORIES_SCHEMA_TOKEN,
+        schema: ProductsCategoriesSchema,
+      },
     ]),
   ],
-  controllers: [FAndBCategoriesController],
-  providers: [FAndBCategoriesService],
-  exports: [FAndBCategoriesService],
+  controllers: [ProductsCategoriesController],
+  providers: [ProductsCategoriesService],
+  exports: [ProductsCategoriesService],
 })
 export class CategoriesModule {}

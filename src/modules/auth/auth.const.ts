@@ -6,5 +6,4 @@ export enum ROLES {
   ADMIN = 'admin',
   USER = 'user',
   VENDOR = 'vendor',
-  PARTNER = 'partner',
 }
